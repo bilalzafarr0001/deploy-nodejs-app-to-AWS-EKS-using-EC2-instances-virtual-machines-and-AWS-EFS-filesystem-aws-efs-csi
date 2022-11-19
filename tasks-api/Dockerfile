@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM  --platform=linux/amd64  node:14-alpine
 
 WORKDIR /app
 
@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 3000
 
 CMD [ "node", "tasks-app.js" ]

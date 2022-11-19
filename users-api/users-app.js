@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+require("dotenv").config();
 
 const userRoutes = require('./routes/user-routes');
 
 const app = express();
 
 app.use(bodyParser.json());
+ 
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,14 +32,26 @@ app.use((err, req, res, next) => {
   res.status(code).json({ message: message });
 });
 
-mongoose.connect(
-  process.env.MONGODB_CONNECTION_URI,
-  { useNewUrlParser: true },
-  (err) => {
-    if (err) {
-      console.log('COULD NOT CONNECT TO MONGODB!');
-    } else {
-      app.listen(3000);
-    }
-  }
-);
+
+mongoose.connect(process.env.MONGODB_CONNECTION_URI, { useNewUrlParser: true, useCreateIndex: true });
+const connection = mongoose.connection;
+
+connection.once("open", () => {
+  console.log("Connected Database Successfully");
+});
+
+app.listen(3000, function (req, res) {
+  console.log("Server is started on port 3000");
+});
+// mongoose.connect(
+//   process.env.ATLAS_URL,
+//   { useNewUrlParser: true },
+//   (err) => {
+//     if (err) {
+//       console.log('COULD NOT CONNECT TO MONGODB!');
+//     } else {
+//       console.log('Connected to mongodb !')
+//       app.listen(3000);
+//     }
+//   }
+// );
